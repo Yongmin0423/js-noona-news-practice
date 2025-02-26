@@ -3,7 +3,8 @@ let news = [];
 
 const getLatestNews = async () => {
   const url = new URL(
-    `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
+    // `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
+    `https://study-website-be-bbb1539aa813.herokuapp.com`
   );
   try {
     const response = await fetch(url);
