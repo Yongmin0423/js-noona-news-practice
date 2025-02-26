@@ -2,7 +2,7 @@ const searchIcon = document.getElementById("search-icon");
 const searchBox = document.getElementById("search-box");
 
 const API_KEY = "8b29827c21c24c2a90a7231a1761642c";
-let news = [];
+let newsList = [];
 
 const getLatestNews = async () => {
   const url = new URL(
@@ -17,7 +17,8 @@ const getLatestNews = async () => {
     }
 
     const data = await response.json();
-    news = data.articles;
+    newsList = data.articles;
+    render();
     console.log(data);
   } catch (error) {
     console.error("Error fetching news:", error);
@@ -25,6 +26,38 @@ const getLatestNews = async () => {
 };
 
 getLatestNews();
+
+const render = () => {
+  let newsHTML = ``;
+  newsHTML = newsList
+    .map(
+      (news) => `<article class="row news">
+          <div class="col-lg-4 img-area">
+             <img class="news-img"
+                src="${
+                  news.urlToImage ||
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU"
+                }"  onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU'" />
+          </div>
+          <div class="col-lg-8">
+            <h2>${news.title}</h2>
+             <p>${
+               news.description == null || news.description == ""
+                 ? "내용없음"
+                 : news.description.length > 200
+                 ? news.description.substring(0, 200) + "..."
+                 : news.description
+             }</p>
+            <div>${news.source.name || "no source"} * ${moment(
+        news.publishedAt
+      ).fromNow()}</div>
+          </div>
+        </article>`
+    )
+    .join("");
+
+  document.getElementById("news-board").innerHTML = newsHTML;
+};
 
 /* Set the width of the side navigation to 250px */
 function openNav() {
