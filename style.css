@@ -85,7 +85,7 @@ header {
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
+@media (max-height: 800px) {
   .sidenav {
     padding-top: 15px;
   }
@@ -94,7 +94,7 @@ header {
   }
 }
 
-@media (max-width: 431px) {
+@media (max-width: 800px) {
   .menu {
     justify-content: flex-start;
     a {
