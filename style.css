@@ -3,12 +3,20 @@ a {
   color: inherit;
 }
 
+.hidden-side {
+  display: none;
+}
+
 .hidden {
   display: none;
 }
 
 .top-nav {
   display: flex;
+  margin-left: 10px;
+  svg {
+    cursor: pointer;
+  }
 }
 header {
   display: flex;
@@ -102,7 +110,7 @@ header {
     }
   }
 
-  .hidden {
+  .hidden-side {
     display: block;
   }
 }
