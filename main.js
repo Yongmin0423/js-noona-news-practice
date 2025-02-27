@@ -1,5 +1,10 @@
 const searchIcon = document.getElementById("search-icon");
 const searchBox = document.getElementById("search-box");
+const menus = document.querySelectorAll(".menus a");
+console.log("menus", menus);
+menus.forEach((menu) =>
+  menu.addEventListener("click", (event) => getWesByCategory(event))
+);
 
 const API_KEY = "8b29827c21c24c2a90a7231a1761642c";
 let newsList = [];
@@ -57,6 +62,31 @@ const render = () => {
     .join("");
 
   document.getElementById("news-board").innerHTML = newsHTML;
+};
+
+const getNewsByKeyWord = async (event) => {
+  event.preventDefault();
+  const keyword = document.getElementById("search-input").value;
+  const url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}`
+  );
+  const response = await fetch(url);
+  const data = await response.json();
+  newsList = data.articles;
+  render();
+};
+
+const getWesByCategory = async (event) => {
+  event.preventDefault();
+  const category = event.target.textContent.toLowerCase();
+  const url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}`
+  );
+  const response = await fetch(url);
+  const data = await response.json();
+  console.log("clicked category", category);
+  newsList = data.articles;
+  render();
 };
 
 /* Set the width of the side navigation to 250px */

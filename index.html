@@ -45,8 +45,8 @@
         </svg>
       </div>
 
-      <form class="hidden" id="search-box">
-        <input type="text" />
+      <form class="hidden" id="search-box" onsubmit="getNewsByKeyWord(event)">
+        <input type="text" id="search-input" />
         <input type="submit" value="go" />
       </form>
     </div>
@@ -60,37 +60,23 @@
         </svg>
       </div>
       <div class="menu">
-        <a href="#">Sport</a>
-        <a href="#">Tech</a>
-        <a href="#">World</a>
-        <a href="#">Finance</a>
-        <a href="#">Politics</a>
-        <a href="#">Economics</a>
+        <a href="#">Business</a>
         <a href="#">Entertainment</a>
-        <a href="#">Beauty</a>
-        <a href="#">Travel</a>
-        <a href="#">Music</a>
-        <a href="#">Food</a>
+        <a href="#">General</a>
+        <a href="#">Health</a>
         <a href="#">Science</a>
-        <a href="#">Energy</a>
+        <a href="#">Sports</a>
+        <a href="#">Technology</a>
       </div>
-      <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
-          >&times;</a
-        >
-        <a href="#">Sport</a>
-        <a href="#">Tech</a>
-        <a href="#">World</a>
-        <a href="#">Finance</a>
-        <a href="#">Politics</a>
-        <a href="#">Economics</a>
+      <div id="mySidenav" class="sidenav menus">
+        <button class="closebtn" onclick="closeNav()">&times;</button>
+        <a href="#">Business</a>
         <a href="#">Entertainment</a>
-        <a href="#">Beauty</a>
-        <a href="#">Travel</a>
-        <a href="#">Music</a>
-        <a href="#">Food</a>
+        <a href="#">General</a>
+        <a href="#">Health</a>
         <a href="#">Science</a>
-        <a href="#">Energy</a>
+        <a href="#">Sports</a>
+        <a href="#">Technology</a>
       </div>
     </header>
 
