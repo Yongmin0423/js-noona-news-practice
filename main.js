@@ -1,37 +1,55 @@
+// 변수 선언
 const searchIcon = document.getElementById("search-icon");
 const searchBox = document.getElementById("search-box");
 const menus = document.querySelectorAll(".menus a");
-console.log("menus", menus);
+const API_KEY = "8b29827c21c24c2a90a7231a1761642c";
+let newsList = [];
+let url;
+
+//공용 함수
+const getNews = async () => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (data.articles.length === 0) {
+      throw new Error("No result for this search");
+    }
+    newsList = data.articles;
+    render();
+  } catch (error) {
+    console.error("Error fetching news:", error);
+    errorRender(error.message);
+  }
+};
+
+// 카테고리
 menus.forEach((menu) =>
   menu.addEventListener("click", (event) => getWesByCategory(event))
 );
 
-const API_KEY = "8b29827c21c24c2a90a7231a1761642c";
-let newsList = [];
+const getWesByCategory = async (event) => {
+  event.preventDefault();
+  const category = event.target.textContent.toLowerCase();
+  url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}`
+  );
+  getNews();
+};
 
+// 최신 뉴스 불러오기
 const getLatestNews = async () => {
-  const url = new URL(
+  url = new URL(
     // `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`
   );
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    newsList = data.articles;
-    render();
-    console.log(data);
-  } catch (error) {
-    console.error("Error fetching news:", error);
-  }
+  getNews();
 };
-
 getLatestNews();
 
+//자료 렌더링
 const render = () => {
   let newsHTML = ``;
   newsHTML = newsList
@@ -64,31 +82,26 @@ const render = () => {
   document.getElementById("news-board").innerHTML = newsHTML;
 };
 
+// 경고창
+const errorRender = (message) => {
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+  ${message}
+</div>`;
+
+  document.getElementById("news-board").innerHTML = errorHTML;
+};
+
+// 검색기능
 const getNewsByKeyWord = async (event) => {
   event.preventDefault();
   const keyword = document.getElementById("search-input").value;
-  const url = new URL(
+  url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render();
+  getNews();
 };
 
-const getWesByCategory = async (event) => {
-  event.preventDefault();
-  const category = event.target.textContent.toLowerCase();
-  const url = new URL(
-    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}`
-  );
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log("clicked category", category);
-  newsList = data.articles;
-  render();
-};
-
+//사이드 바 열기 / 닫기
 /* Set the width of the side navigation to 250px */
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px";
@@ -98,7 +111,7 @@ function openNav() {
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
-
+// 검색창 보이기 / 안 보이기
 const toggleSearchBox = () => {
   console.log("clicked");
   searchBox.classList.toggle("hidden");
