@@ -8,7 +8,7 @@ let url;
 let totalResults = 0;
 let page = 1;
 const pageSize = 10;
-const groupSize = 4;
+const groupSize = 5;
 
 //공용 함수
 const getNews = async () => {
@@ -25,7 +25,7 @@ const getNews = async () => {
       throw new Error("No result for this search");
     }
     newsList = data.articles;
-    totalResults = data.totalResults;
+    totalResults = Math.ceil(parseInt(data.totalResults, 10));
     render();
     paginationRender();
   } catch (error) {
@@ -41,6 +41,7 @@ menus.forEach((menu) =>
 
 const getWesByCategory = async (event) => {
   event.preventDefault();
+  page = 1;
   const category = event.target.textContent.toLowerCase();
   url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}`
@@ -94,14 +95,15 @@ const render = () => {
 // 페이지네이션
 const paginationRender = () => {
   const pageGroup = Math.ceil(page / groupSize);
-  const lastPage = pageGroup * groupSize;
-  const totalPages = totalResults / pageSize;
+  let lastPage = pageGroup * groupSize;
+  const totalPages = Math.ceil(totalResults / pageSize);
   if (lastPage > totalPages) {
     lastPage = totalPages;
   }
-  const firstPage = lastPage - (groupSize - 1);
+  const firstPage =
+    lastPage - (groupSize - 1) <= 0 ? 1 : lastPage - (groupSize - 1);
   let paginationHTML = `    <li class="page-item ${
-    page === 1 ? "disabled" : ""
+    page === 1 ? "hidden" : ""
   }" onclick="moveToPage(${page - 1})"><a class="page-link">Previous</a></li>`;
 
   for (let i = firstPage; i <= lastPage; i++) {
@@ -114,7 +116,7 @@ const paginationRender = () => {
   paginationHTML += `<li class="page-item" onclick="moveToPage(${
     page + 1
   })"><a class="page-link ${
-    page === totalPages ? "disabled" : ""
+    page === totalPages ? "hidden" : ""
   }" href="#">Next</a></li>`;
   document.querySelector(".pagination").innerHTML = paginationHTML;
 };
