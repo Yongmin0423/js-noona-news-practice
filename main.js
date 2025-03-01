@@ -5,10 +5,17 @@ const menus = document.querySelectorAll(".menus a");
 const API_KEY = "8b29827c21c24c2a90a7231a1761642c";
 let newsList = [];
 let url;
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 4;
 
 //공용 함수
 const getNews = async () => {
   try {
+    url.searchParams.set("page", page);
+    url.searchParams.set("pageSize", pageSize);
+
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -18,7 +25,9 @@ const getNews = async () => {
       throw new Error("No result for this search");
     }
     newsList = data.articles;
+    totalResults = data.totalResults;
     render();
+    paginationRender();
   } catch (error) {
     console.error("Error fetching news:", error);
     errorRender(error.message);
@@ -80,6 +89,39 @@ const render = () => {
     .join("");
 
   document.getElementById("news-board").innerHTML = newsHTML;
+};
+
+// 페이지네이션
+const paginationRender = () => {
+  const pageGroup = Math.ceil(page / groupSize);
+  const lastPage = pageGroup * groupSize;
+  const totalPages = totalResults / pageSize;
+  if (lastPage > totalPages) {
+    lastPage = totalPages;
+  }
+  const firstPage = lastPage - (groupSize - 1);
+  let paginationHTML = `    <li class="page-item ${
+    page === 1 ? "disabled" : ""
+  }" onclick="moveToPage(${page - 1})"><a class="page-link">Previous</a></li>`;
+
+  for (let i = firstPage; i <= lastPage; i++) {
+    paginationHTML += `<li class="page-item ${
+      i === page ? "active" : ""
+    }" onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>`;
+    document.querySelector(".pagination").innerHTML = paginationHTML;
+  }
+
+  paginationHTML += `<li class="page-item" onclick="moveToPage(${
+    page + 1
+  })"><a class="page-link ${
+    page === totalPages ? "disabled" : ""
+  }" href="#">Next</a></li>`;
+  document.querySelector(".pagination").innerHTML = paginationHTML;
+};
+
+const moveToPage = (event) => {
+  page = event;
+  getNews();
 };
 
 // 경고창
